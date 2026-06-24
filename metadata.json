@@ -1,0 +1,8 @@
+{
+  "name": "ELC - Elite Language Center",
+  "description": "الموقع الرسمي والمنصة التعريفية لمدرسة اللغات Elite Language Center. يتيح للزوار استكشاف البرامج التعليمية المتاحة لتعلم الإنجليزية والفرنسية، والتعرف على المدرسة، وحجز اختبار تحديد المستوى.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
