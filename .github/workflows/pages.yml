@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'index.html'
+      - 'assets/**'
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   build-and-deploy:
@@ -29,22 +30,21 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy built files
         run: |
-          rm -rf docs
-          cp -r dist docs
+          # Copy dist files to root, excluding the dist folder structure
+          cp dist/index.html .
+          mkdir -p assets
+          cp -r dist/assets/* assets/ || true
+          
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add docs/
-          git commit -m "Deploy to GitHub Pages [skip ci]" || true
-          git push origin main
-
-      - name: Configure GitHub Pages
-        run: |
-          gh api -X PATCH repos/${{ github.repository }}/pages \
-            -f 'source.branch=main' \
-            -f 'source.path=/docs' \
-            || echo "Pages configuration may have already been set or requires manual configuration"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git add index.html assets/
+          
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Deploy built assets [skip ci]"
+            git push origin main
+          fi
 
