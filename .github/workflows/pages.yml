@@ -39,3 +39,12 @@ jobs:
           git commit -m "Deploy to GitHub Pages [skip ci]" || true
           git push origin main
 
+      - name: Configure GitHub Pages
+        run: |
+          gh api -X PATCH repos/${{ github.repository }}/pages \
+            -f 'source.branch=main' \
+            -f 'source.path=/docs' \
+            || echo "Pages configuration may have already been set or requires manual configuration"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
